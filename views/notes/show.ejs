@@ -13,15 +13,16 @@ integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG
                             <h3 style="font-weight: bold ; color: <%= notes.color %>">Title:  <%=notes.heading%></h3>
                             <% } %>
 
-                            <% if(notes.style==='italic' ) { %>
+                            <%  if(notes.style==='italic' ) { %>
                               <h3 style="font-style:italic ; color: <%= notes.color %>">Title:  <%=notes.heading%></h3>
                               <% } %>
 
-                              <% if(notes.style==='' ) { %>
+                              <% if ( !notes.style) { %>   
                                 <h3 style="color: <%=notes.color%>">
                                     Title:  <%=notes.heading%>
                                 </h3>
-                                <% } %>
+                                <% } %> 
+                        
                              
                                 
                         </div>

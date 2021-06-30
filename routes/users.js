@@ -53,7 +53,7 @@ router.post('/login', passport.authenticate('local', { failureRedirect: '/login'
 })
 
 router.get('/logout', (req, res) => {
-  const redirectUrl = req.session.returnTo || '/notes';
+  const redirectUrl = req.session.returnTo || '/';
   delete req.session.returnTo;
   req.logout();
   req.flash('success', 'Successfully LoggedOut!');
