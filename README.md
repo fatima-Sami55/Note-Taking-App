@@ -3,6 +3,8 @@
 
 Welcome to the **Note-Taking App**! 🎉 This is a simple web application built with Node.js and MySQL, designed to allow users to create, edit, and delete notes. 📝
 
+🌐 Check out the [Live Demo](https://note-taking-app-phi-ten.vercel.app)!
+
 🛠️ Features
 ------------
 
