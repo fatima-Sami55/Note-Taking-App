@@ -1,11 +1,11 @@
-// if (process.env.NODE_ENV !== "production") {
-//   require('dotenv').config()
-// }
+if (process.env.NODE_ENV !== "production") {
+  require('dotenv').config()
+}
 
 const express = require('express');
 const app = express();
 const path = require('path');
-const mysql = require('mysql');
+const mysql = require('mysql2');
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
 const flash = require('connect-flash');
@@ -35,13 +35,17 @@ app.use(cookieParser())
 
 // const sessionStore = new MySQLStore(db);
 const sessionStore = new MySQLStore({
+  host: process.env.HOST,
+  user: process.env.USER,
+  password: process.env.PASSWORD,
+  database: process.env.DATABASE,
   expiration: 60 * 2000
-}, db);
+});
 
 const sessionConfig = {
   name: 'session',
   store: sessionStore,
-  secret: '25658595',
+  secret:  process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
   cookie: {
@@ -57,48 +61,51 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
-
-
-
-
 passport.use('local', new LocalStrategy({
-  // by default, local strategy uses username and password, we will override with username
   usernameField: 'username',
   passwordField: 'password',
-  passReqToCallback: true // allows us to pass back the entire request to the callback
+  passReqToCallback: true
 },
-  function (req, username, password, done) { // callback with username and password from our form
+  function (req, username, password, done) {
+    // parameterized query to avoid SQL injection
+    db.query("SELECT * FROM user WHERE username = ?", [username], function (err, rows) {
+      if (err) return done(err);
 
-    db.query("SELECT * FROM user WHERE username = '" + username + "'", function (err, rows) {
-      if (err)
-        return done(err);
       if (!rows.length) {
-        return done(null, false, req.flash('error', 'No user found.')); // req.flash is the way to set flashdata using connect-flash
+        return done(null, false, req.flash('error', 'No user found.'));
       }
 
-      // if the user is found but the password is wrong
-   
-      if (!rows[0].password == bcrypt.compareSync(password , rows[0].password))
-        return done(null, false, req.flash('error', 'Oops! Wrong password.')); // create the loginMessage and save it to session as flashdata
-      else
-      // all is well, return successful user
-      return done(null, rows[0]);
+      const user = rows[0];
 
+      // Use bcrypt.compare (async) instead of compareSync for better performance
+      bcrypt.compare(password, user.password, function (err, isMatch) {
+        if (err) return done(err);
+
+        if (!isMatch) {
+          return done(null, false, req.flash('error', 'Oops! Wrong password.'));
+        }
+
+        // Auth success
+        return done(null, user);
+      });
     });
+  }
+));
 
-
-  }));
+// Serialize the user's ID into the session
 passport.serializeUser(function (user, done) {
   done(null, user.userid);
 });
 
-
-
-passport.deserializeUser(function(user_id, done){
-  db.query('SELECT * FROM user WHERE userid = ?', [user_id], function (err, rows){
-      done(err, rows[0]);
+// Deserialize user from ID stored in session
+passport.deserializeUser(function (user_id, done) {
+  db.query('SELECT * FROM user WHERE userid = ?', [user_id], function (err, rows) {
+    if (err) return done(err);
+    done(null, rows[0]);
   });
 });
+
+
 app.use((req, res, next) => {
   res.locals.currentUser = req.user;
   res.locals.success = req.flash('success');
@@ -112,7 +119,6 @@ app.use('/', user)
 app.get('/', (req, res) => {
   res.render('home')
 })
-
 
 app.listen(port, () => {
   console.log(`on port ${port}`)

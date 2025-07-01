@@ -1,33 +1,33 @@
 
-<link rel='stylesheet' type="text/css" href="/styles/home.css">
+<!DOCTYPE html>
 <html>
 
 <head>
+  <meta charset="UTF-8">
+  <title>Note App</title>
+  <link rel='stylesheet' type="text/css" href="/styles/home.css">
   <link href='https://fonts.googleapis.com/css?family=Titillium+Web:400,300,300italic,400italic,600italic,600' rel='stylesheet' type='text/css'>
-  </style>
-
-  <link rel="Stylesheet" href="https://ianlunn.github.io/Hover/css/hover.css" type="text/css" />
-  
-  <link rel="Stylesheet" href='https://fonts.googleapis.com/css?family=Muli' type='text/css'>
+  <link rel="stylesheet" href="https://ianlunn.github.io/Hover/css/hover.css" type="text/css" />
+  <link rel="stylesheet" href='https://fonts.googleapis.com/css?family=Muli' type='text/css'>
 </head>
 
 <body>
-<div class="hero">
 
-<div class="fullscreen-bg">
-  <video src="https://player.vimeo.com/external/563174317.sd.mp4?s=6fb5325905ecf93063e0f4b399d7c7858e33f193&profile_id=165&oauth2_token_id=57447761"  class="fullscreen-bg__video" autoplay muted loop></video>
+
+  <div class="hero">
+  <div class="fullscreen-bg"></div>
 </div>
-</div>
+
 
   <nav>
     <ul>
-      <li><a href="#">Home</a></li>
-      <li><a href="/notes">notes</a></li>
+      <li><a href="/" style="cursor:pointer;">Home</a></li>
+      <li><a href="/notes" style="cursor:pointer;">Notes</a></li>
       <% if (!currentUser){ %>
-      <li><a href="/login">login</a></li>
-      <li><a href="/register">Register</a></li>
+      <li><a href="/login" style="cursor:pointer;">Login</a></li>
+      <li><a href="/register" style="cursor:pointer;">Register</a></li>
       <% }else{ %>
-      <li><a href="/logout">logout</a></li>
+      <li><a href="/logout" style="cursor:pointer;">Logout</a></li>
       <% } %>
     </ul>
   </nav>
