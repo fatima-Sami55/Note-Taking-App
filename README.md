@@ -14,7 +14,7 @@ Welcome to the **Note-Taking App**! 🎉 This is a simple web application built 
 *   **Persistent Data:** Notes are saved in a MySQL database, so they are available even after restarting the app. 🔒
 *   **Simple Interface:** A clean, user-friendly UI for managing your notes. 🎨
 
-🧑‍💻 Technologies Used
+🖥️ Technologies Used
 -----------------------
 
 *   **Node.js:** JavaScript runtime for building the backend. 🚀
